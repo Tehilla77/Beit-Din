@@ -17,6 +17,7 @@ async function IsUserExist(req,res){
     res.send(user)
 }
 async function CreateUser(req,res){
+    console.log('i here')
     const user ={
         id:req.params.id,
         password:req.params.password,

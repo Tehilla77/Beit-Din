@@ -13,4 +13,9 @@ async function getDiscussions() {
     console.log('getDiscussionById')
     return rows[0]
   }
-  module.exports={getDiscussions,getDiscussionById}
+  async function createDiscussion(Discussion) {
+    const sql = `insert into discussion(discussion_date,discussion_hour,discussion_time,case_id,protocol,is_finish)values('${Discussion.discussion_date}','${Discussion.discussion_hour}',${Discussion.discussion_time},${Discussion.case_id},'${Discussion.protocol}',${Discussion.is_finish})`;
+    console.log(sql)
+    const [rows, fields] = await pool.query(sql);
+  }
+  module.exports={getDiscussions,getDiscussionById,createDiscussion}

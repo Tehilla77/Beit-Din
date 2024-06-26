@@ -6,12 +6,10 @@ usersRouter.route('/:id')
 .get(GetUserById)
 .put(CreateUser)
 
-usersRouter.route('/:id/:password')
-.get(IsUserExist)
+// usersRouter.route('/:id/:password')
+// .get(IsUserExist)
 
 usersRouter.route('/')
 .get(GetUsers)
-
-
 
 module.exports = usersRouter;
