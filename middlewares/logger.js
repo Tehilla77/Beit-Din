@@ -1,6 +1,6 @@
 const fsPromises = require('fs').promises;
 const config = require('../config/config');
-
+const path = require('path');
 
 async function logger(req, res, next) {
     const date = new Date().toLocaleDateString();

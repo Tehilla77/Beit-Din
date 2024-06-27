@@ -1,24 +1,23 @@
-const { getUsers,getUserById, isUserExist, createUser} = require('../models/usersModel');
+const { getUsers, getUserById, isUserExist, createUser } = require('../models/usersModel');
 
 
 async function GetUsers(req, res) {
-        const user = await getUsers();
-        res.send(user)
-    }
+    const user = await getUsers();
+    res.send(user)
+}
 
-   
-async function GetUserById(req, res){
+
+async function GetUserById(req, res) {
     const user = await getUserById(req.params.id);
     res.send(user)
 }
 
-async function IsUserExist(req,res){
-    const user = await isUserExist(req.params.id,req.params.password);
+async function IsUserExist(req, res) {
+    const user = await isUserExist(req.params.id, req.params.password);
     res.send(user)
 }
-async function CreateUser(req,res){
-    console.log('i here')
-    const user ={
+async function CreateUser(req, res) {
+    const user = {
         id:req.params.id,
         password:req.params.password,
         first_name:req.params.first_name,
@@ -31,4 +30,4 @@ async function CreateUser(req,res){
     res.send(u)
 }
 
-    module.exports = {GetUserById,GetUsers,IsUserExist,CreateUser};
+module.exports = { GetUserById, GetUsers, IsUserExist, CreateUser };

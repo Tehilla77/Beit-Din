@@ -4,7 +4,10 @@ const {GetUserById,GetUsers, IsUserExist, CreateUser} = require('../controllers/
 
 usersRouter.route('/:id')
 .get(GetUserById)
-.put(CreateUser)
+
+
+usersRouter.route('/')
+.post(CreateUser)
 
 // usersRouter.route('/:id/:password')
 // .get(IsUserExist)
