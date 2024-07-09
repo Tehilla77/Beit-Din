@@ -5,5 +5,6 @@ config.db_host = process.env.DB_HOST;
 config.db_password = process.env.DB_PASSWORD;
 config.db_port = process.env.DB_PORT
 config.node_env = process.env.NODE_ENV
+config.manager_id = process.env.MANAGER_ID
 
 module.exports = config;

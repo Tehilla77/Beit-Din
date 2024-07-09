@@ -1,5 +1,4 @@
-const { getCases,getCaseById,createCase} = require('../models/casesModel');
-
+const { getCases,getCaseById,createCase,getCaseByUserId} = require('../models/casesModel');
 
 async function GetCases(req, res) {
         const c = await getCases();
@@ -21,5 +20,10 @@ async function CreateCase(req,res){
     const c = await createCase(caseDetails)
     res.send(c)
 }
+async function GetCaseByUserId(req,res){
+    console.log('GetCaseByUserId')
+    const c = await getCaseByUserId(req.params.id);
+    res.send(c)
+}
 
-    module.exports = {GetCaseById,GetCases,CreateCase};
+    module.exports = {GetCaseById,GetCases,CreateCase,GetCaseByUserId};
