@@ -1,11 +1,13 @@
-.env
-**/node_modules
-/upload
-.excalidraw
+*.env
+**/config
+*.log
+*.txt
+**/upload
+*.excalidraw
 
 
 # dependencies
-/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 
