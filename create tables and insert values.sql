@@ -1,6 +1,5 @@
 use beis_din_db;
 
-
 create table users(
 id varchar(9) primary key,
 password varchar(30),
@@ -44,6 +43,12 @@ is_finish boolean,
 CONSTRAINT `fk_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`case_id`)
 );
  
+create table files(
+ id int auto_increment primary key,
+ discussion_id int,
+ file_path varchar(50)
+)
+
 -- insert into users values('215635640','12345#Cc',"חדוה","דואר","ch0583271192@gmail.com","0583271192","פחד יצחק 37", false);
 -- insert into users values('326381837','12345#Tt',"תהילה","דואר","t0527681877@gmail.com","0527681877","פחד יצחק 37", false);
 -- insert into cases values("2024-07-22",false,false,1,'326381837','215635640',"בניה לא חוקית");

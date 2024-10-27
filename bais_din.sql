@@ -1,1 +1,0 @@
-SELECT * FROM beis_din_db.discussions;
