@@ -1,12 +1,23 @@
 const express = require('express');
 const discussionRouter = express.Router();
-const { GetDiscussions,GetDiscussionsById} = require('../controllers/discussionController');
+const { GetDiscussions, GetDiscussionsById, GetDiscussionByCaseId,CreateInquireByDisId,CreateDiscussion,DeleteDiscussion,GetInquiriesByDiscussionId} = require('../controllers/discussionController');
+
+discussionRouter.route('/:id')
+    .get(GetDiscussionsById)
+    .delete(DeleteDiscussion)
+
+discussionRouter.route('/createInquire')
+    .post(CreateInquireByDisId)
+
+discussionRouter.route('/inquires/:id')
+    .get(GetInquiriesByDiscussionId)
+
+
+discussionRouter.route('/getDiscussionByCaseId/:id')
+    .get(GetDiscussionByCaseId)
 
 discussionRouter.route('/')
     .get(GetDiscussions)
-    
+    .post(CreateDiscussion)
 
-discussionRouter.route('/:id')
-.get(GetDiscussionsById)
-    
-    module.exports = discussionRouter;
+module.exports = discussionRouter;

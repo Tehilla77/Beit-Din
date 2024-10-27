@@ -1,9 +1,9 @@
-create database beis_din_db;
 use beis_din_db;
-drop table users;
+
+
 create table users(
- id varchar(9) primary key,
- password varchar(30),
+id varchar(9) primary key,
+password varchar(30),
 first_name varchar(30),
 last_name varchar(30),
 email varchar(30),
@@ -11,31 +11,40 @@ phone varchar(30),
 address varchar(30),
 is_manager boolean
  );
- drop table discussion;
-drop table cases;
 
 create table cases(
+ last_enter date,
  is_defedant_agree boolean,
  is_decision boolean,
  case_id int auto_increment primary key,
  prosecutor_id varchar(30),
  defendant_id varchar(30),
- issue varchar(30)
+ issue varchar(30),
+ CONSTRAINT `fk_id_prosecutor` FOREIGN KEY (`prosecutor_id`) REFERENCES `users` (`id`),
+ CONSTRAINT `fk_id_defendant_id` FOREIGN KEY (`defendant_id`) REFERENCES `users` (`id`)
 );
-create table discussion(
+
+create table inquiries(
+id int auto_increment primary key,
+content_inquiries varchar(200),
+finish_date date,
+type_inquiries int check(type_inquiries>0 and type_inquiries<4),
+is_done boolean,
+discussion_id int,
+CONSTRAINT `dis_id` FOREIGN KEY (`discussion_id`) REFERENCES `discussions` (`discussion_id`)
+);
+
+create table discussions(
 discussion_id int auto_increment primary key,
 discussion_date date,
 discussion_hour varchar(5),
 disccussion_time int,
 case_id int,
-protocol varchar(200),
-next_discussion date,
 is_finish boolean,
 CONSTRAINT `fk_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`case_id`)
- );
+);
  
-insert into cases values(false,false,1,'326381837','215635640',"building");
-insert into users values('215635640','4321',"Chedva","Douer","ch0583271192@gmail.com","0583271192","pachad yitschak st", false);
-insert into users values('326381837','1234',"Tehilla","Douer","t0527681877@gmail.com","0527681877","pachad yitschak st", false);
-insert into discussion values(1,"2024-04-01","12:30",90,1,"protocol is","2024-05-01", false);
-insert into discussion values(2,"2024-04-02","12:30",90,1,"protocol is","2024-05-02", false);
+-- insert into users values('215635640','12345#Cc',"חדוה","דואר","ch0583271192@gmail.com","0583271192","פחד יצחק 37", false);
+-- insert into users values('326381837','12345#Tt',"תהילה","דואר","t0527681877@gmail.com","0527681877","פחד יצחק 37", false);
+-- insert into cases values("2024-07-22",false,false,1,'326381837','215635640',"בניה לא חוקית");
+-- insert into cases values("2024-07-22",false,false,1,'326381837','215635640',"עסק פושט רגל");

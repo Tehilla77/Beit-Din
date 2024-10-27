@@ -1,29 +1,67 @@
-const { getCases,getCaseById,createCase,getCaseByUserId} = require('../models/casesModel');
+const { getCases, getCaseById, createCase, getCaseByUserId, geFullCases, updateLastEnter } = require('../models/casesModel');
 
 async function GetCases(req, res) {
+    try {
         const c = await getCases();
-        res.send(c)
+        res.send(c);
     }
-
-   
-async function GetCaseById(req, res){
-    const c = await getCaseById(req.params.id);
-    res.send(c)
-}
-
-async function CreateCase(req,res){
-    const caseDetails ={
-        prosecutor_id:req.params.prosecutor_id,
-        defendant_id:req.params.defendant_id,
-        issue:req.params.issue
+    catch (error) {
+        return error;
     }
-    const c = await createCase(caseDetails)
-    res.send(c)
-}
-async function GetCaseByUserId(req,res){
-    console.log('GetCaseByUserId')
-    const c = await getCaseByUserId(req.params.id);
-    res.send(c)
 }
 
-    module.exports = {GetCaseById,GetCases,CreateCase,GetCaseByUserId};
+async function GeFullCases(req, res) {
+    try {
+        const c = await geFullCases();
+        res.send(c);
+    }
+    catch (error) {
+        return error;
+    }
+}
+
+
+async function GetCaseById(req, res) {
+    try {
+        const c = await getCaseById(req.params.id);
+        res.send(c);
+    }
+    catch (error) {
+        return error;
+    }
+}
+
+async function CreateCase(req, res) {
+    const caseDetails = {
+        prosecutor_id: req.body.prosecutor_id,
+        defendant_id: req.body.defendant_id,
+        issue: req.body.issue
+    }
+    try {
+        const c = await createCase(caseDetails)
+        res.send(c);
+    }
+    catch (error) {
+        return error;
+    }
+}
+
+async function GetCaseByUserId(req, res) {
+    try {
+        const c = await getCaseByUserId(req.params.id);
+        res.send(c);
+    }
+    catch (error) {
+        return error;
+    }
+}
+async function UpdateLastEnter(req, res) {
+    try {
+        const c = await updateLastEnter(req.params.id);
+        res.send(c);
+    }
+    catch (error) {
+        return error;
+    }
+}
+module.exports = { GetCaseById, GetCases, CreateCase, GetCaseByUserId, GeFullCases, UpdateLastEnter };
