@@ -1,0 +1,35 @@
+.UploadFile {
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  color: rgb(41, 17, 5);
+
+
+
+  .select-area {
+    width: 150px;
+    height: 40px;
+    border: 1px solid rgb(160, 92, 66);
+    color: rgb(160, 92, 66);
+    border-radius: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: center;
+    // margin-right: 50px;
+    margin-top: 3px;
+    // margin-bottom: 0px;
+  }
+
+  .select-area:hover {
+    background-color: rgb(160, 92, 66);
+    color: white;
+  }
+
+}
