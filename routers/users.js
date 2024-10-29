@@ -2,7 +2,7 @@ const express = require('express');
 const usersRouter = express.Router();
 const {GetUserById,GetUsers, IsUserExist, CreateUser, DeleteUser,UpdateUser} = require('../controllers/usersController');
 
-usersRouter.route('/log-in')
+usersRouter.route('/log-in/id')
 .post(IsUserExist) 
 
 usersRouter.route('/:id')
