@@ -1,9 +1,9 @@
 const express = require('express');
 const usersRouter = express.Router();
-const {GetUserById,GetUsers, IsUserExist, CreateUser, DeleteUser,UpdateUser} = require('../controllers/usersController');
+const {GetUserById,GetUsers, LogIn, CreateUser, DeleteUser,UpdateUser, LogIn} = require('../controllers/usersController');
 
-usersRouter.route('/log-in/id')
-.post(IsUserExist) 
+usersRouter.route('/log-in')
+.post(LogIn) 
 
 usersRouter.route('/:id')
 .get(GetUserById)

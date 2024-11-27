@@ -41,6 +41,7 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
   //     setErr(error)
   //   })
   // }
+
   const logInByIdAndPassword = (user: User) => {
     FileService.getUserByIdAndPwd(user).then((res) => {
       console.log(res.data)
@@ -66,7 +67,6 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
     })
   }
 
-
   const goToLogIn = () => {
     setLogIn(true)
     setSignUp(false)
@@ -81,7 +81,7 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
     {!isUserCases && !isManager && (logIn || !signUp) ? <button className={'btn btn-warning col-sm-6'} onClick={goToSignUp}>הרשמה</button> : ''}
     {signUp ? <SignUp funcSetUserId={()=>{}}> </SignUp> : ''}
     {errSignUp?<p>אופס, היתה תקלה בהרשמה שלך</p>:''}
-    {logIn ? <LogIn funcParentAdd={logInByIdAndPassword} > </LogIn> : ''}
+    {logIn ? <LogIn funcParentAdd={logInByIdAndPassword}> </LogIn> : ''}
     {errLogIn?<p>הנתונים שהזנת שגויים</p>:''}
     {IsErr?<p>{err.toString()}</p>:''}
     {isUserCases ? <UserCases userId={userId}></UserCases> : ''}

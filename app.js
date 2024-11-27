@@ -6,11 +6,15 @@ const cors = require('cors');
 const morgan = require('morgan');
 const config = require('./config/config');
 const logger = require('./middlewares/logger');
-// const multer = require('multer');
 const discussionRouter = require('./routers/discussion')
 const usersRouter = require('./routers/users')
 const casesRouter = require('./routers/cases')
 const filesRouter = require('./routers/files')
+
+const verifyJWT = require("./middlewares/verifyJWT");
+// const verifyAdmin = require("./middlewares/verifyAdmin");
+// const verifyUser = require("./middlewares/verifyUser");
+
 const app = express();
 app.use (express.json());
 app.use(express.urlencoded({extended: true}));
@@ -23,9 +27,11 @@ app.use(logger);
 app.use(morgan('Method: :method URL: :url Status: :status '));
 app.use('/', express.static(path.join(__dirname, '/')));
 app.use('/users',usersRouter)
+
+
 app.use('/discussion',discussionRouter)
-app.use('/cases',casesRouter)
 app.use('/files',filesRouter)
+app.use('/cases',casesRouter)
 
 app.get('/',(req,res)=>{
   res.send('home');

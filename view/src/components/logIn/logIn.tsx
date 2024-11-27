@@ -48,7 +48,7 @@ const LogIn: FC<LogInProps> = (props:LogInProps) => {
         <input name='password' onChange={myForm.handleChange} className={myForm.errors.password ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.password ? <small>{myForm.errors.password}</small> : ''}
       </div>
-
+      
       <button type='submit' className='btn btn-warning mt-5'>הכנס</button>
     </form>
   </div>
