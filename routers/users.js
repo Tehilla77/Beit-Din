@@ -10,17 +10,11 @@ usersRouter.use(cors({
     credentials: true
 }));
 
-usersRouter.post('/log-in',async (req, res) => {
-    try {
-        const response = await LogIn(req, res);
-        res.send(response);
-    } catch (err) {
-        res.status(500).json({ error: "User creation failed" });
-    }
-})
+usersRouter.route('/log-in')
+.post(LogIn)
 
 usersRouter.route('/:id')
-.get(verifyJWT,GetUserById)
+.get(GetUserById)
 .delete(DeleteUser)
 
 usersRouter.route('/')

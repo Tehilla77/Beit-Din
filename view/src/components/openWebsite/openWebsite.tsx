@@ -21,55 +21,44 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
   const [logIn, setLogIn] = useState<boolean>(false)
   const [signUp, setSignUp] = useState<boolean>(false)
   const [isManager, setIsManager] = useState<boolean>(false)
-  const [userId, setUserId] = useState<any>();
   const [errLogIn, setErrLogIn] = useState<boolean>(false)
   const [errSignUp, setErrSignUp] = useState<boolean>(false)
-  const [err,setErr] = useState<string>('')
-  const [IsErr,setIsErr] = useState<boolean>(false)
+  const [err, setErr] = useState<string>('')
+  const [IsErr, setIsErr] = useState<boolean>(false)
+  const [userType, setUserType] = useState<boolean>(false)
+  const [DayanType, setDayanType] = useState<boolean>(false)
+  const [adminType, setAdminType] = useState<boolean>(false)
 
-  const myDiscussionSlice = useSelector((myStore: any) => myStore.discussionSlice)
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getDiscussions())
-  }, []);
+  const [userId, setUserId] = useState<any>();
 
-  // function addNewUser(user: User): void {
-  //   FileService.createUser(user).then((res) => {
-  //     console.log(res.data)
+  // const myDiscussionSlice = useSelector((myStore: any) => myStore.discussionSlice)
+  // const dispatch = useAppDispatch();
+  // useEffect(() => {
+  //   dispatch(getDiscussions())
+  // }, []);
+
+  // const logInByIdAndPassword = (user: User) => {
+  //   FileService.getUserByIdAndPwd(user).then((res) => {
+  //     console.log('res.data.user',res.data.user.id)
+  //     if (res.data.user.user_type == 3) {
+  //       console.log('manager')
+  //       navigate('/show-cases')
+  //     }
+  //     else {
+  //       setUserId(res.data.user.id)
+  //       setLogIn(false)
+  //       setSignUp(false)
+  //       setIsUserCases(true)
+  //       setErrLogIn(false)
+  //     }
   //   }).catch(error => {
+  //     setErrLogIn(true)
   //     setIsErr(true)
   //     setErr(error)
   //   })
   // }
 
-  const logInByIdAndPassword = (user: User) => {
-    console.log('hiiiiiiiiiii I here')
-    FileService.getUserByIdAndPwd(user).then((res) => {
-      console.log('res.data.user',res.data.user)
-      if (res.data.user.id = '326381837') {
-        console.log('is manager!')
-        navigate('/show-cases')
-        console.log('is manager1!')
-        setLogIn(false)
-        setSignUp(false)
-      }
-      else {
-        console.log(res.data[0].id)
-        setUserId(res.data[0].id)
-        setLogIn(false)
-        setSignUp(false)
-        setIsUserCases(true)
-        setErrLogIn(false)
-      }
-    }).catch(error => {
-      setErrLogIn(true)
-      setIsErr(true)
-      setErr(error)
-    })
-  }
-
   const goToLogIn = () => {
-    console.log('hiiiiiiiiiii')
     setLogIn(true)
     setSignUp(false)
   }
@@ -78,16 +67,28 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
     setSignUp(true)
   }
 
+  const func = (id: string, user_type: number) => {
+    setUserId(id)
+    if (user_type == 1)
+      setUserType(true)
+    if (user_type == 2)
+      setDayanType(true)
+    if (user_type == 3)
+      setAdminType(true)
+  }
+
   return <div className='container'><div>{!isUserCases && !isManager ? <h1 className='m-5 col-sm-6 text-center'>ניהול בית הדין</h1> : ''}
     {!isUserCases && !isManager && (signUp || !logIn) ? <button className={'btn btn-warning col-sm-6'} onClick={goToLogIn}>כניסה</button> : ''}
     {!isUserCases && !isManager && (logIn || !signUp) ? <button className={'btn btn-warning col-sm-6'} onClick={goToSignUp}>הרשמה</button> : ''}
-    {signUp ? <SignUp funcSetUserId={()=>{}}> </SignUp> : ''}
-    {errSignUp?<p>אופס, היתה תקלה בהרשמה שלך</p>:''}
-    {logIn ? <LogIn funcParentAdd={logInByIdAndPassword}> </LogIn> : ''}
-    {errLogIn?<p>הנתונים שהזנת שגויים</p>:''}
-    {IsErr?<p>{err.toString()}</p>:''}
-    {isUserCases ? <UserCases userId={userId}></UserCases> : ''}
-     {/* אמור להיות בסטור של הלקוח ואז לא צריך להעביר לו פרמטרים פשוט עוברים עם ניווט */}
+    {signUp ? <SignUp funcSetUserId={func}> </SignUp> : ''}
+    {errSignUp ? <p>אופס, היתה תקלה בהרשמה שלך</p> : ''}
+    {logIn ? <LogIn funcParentAdd={func}> </LogIn> : ''}
+    {errLogIn ? <p>הנתונים שהזנת שגויים</p> : ''}
+    {IsErr ? <p>{err.toString()}</p> : ''}
+    {/* {adminType ? navigate('/show-cases') : ''} */}
+
+    {userType ? <UserCases userId={userId}></UserCases> : ''}
+    {/* אמור להיות בסטור של הלקוח ואז לא צריך להעביר לו פרמטרים פשוט עוברים עם ניווט */}
   </div></div>
 }
 

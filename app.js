@@ -28,6 +28,7 @@ app.use(cookieParser());
 app.use(logger);
 app.use(morgan('Method: :method URL: :url Status: :status '));
 app.use('/', express.static(path.join(__dirname, '/')));
+
 app.use('/users',usersRouter)
 
 

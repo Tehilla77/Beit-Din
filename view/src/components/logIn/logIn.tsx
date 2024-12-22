@@ -1,19 +1,35 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import './logIn.scss';
 import User from '../../models/User';
+import FileService from '../../service/file.service';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
 
-interface LogInProps { 
-  funcParentAdd:(user: User)=>void
-  children:React.ReactNode
+interface LogInProps {
+  funcParentAdd: (id: string, user_type: number) => void
+  children: React.ReactNode
 }
 
-const LogIn: FC<LogInProps> = (props:LogInProps) => {
+const LogIn: FC<LogInProps> = (props: LogInProps) => {
+  const [userId, setUserId] = useState<any>();
+  const [userType, setUserType] = useState<any>();
+  const [err, setErr] = useState<string>('')
+  const [IsErr, setIsErr] = useState<boolean>(false)
+
+  const logInByIdAndPassword = (user: User) => {
+    FileService.getUserByIdAndPwd(user).then((res) => {
+      setUserId(res.data.user.id)
+      setUserType(res.data.user.user_type)
+    }).catch(error => {
+      setIsErr(true)
+      setErr(error)
+    })
+  }
   const myForm = useFormik({
-    initialValues: new User("id","password","first_name", "last_name","email","phone","address"),
+    initialValues: new User("id", "password", "first_name", "last_name", "email", "phone", "address",1),
     onSubmit: (valueForm: User) => {
-      props.funcParentAdd(valueForm)
+      logInByIdAndPassword(valueForm)
+      props.funcParentAdd(userId, userType)
     },
     validationSchema: Yup.object().shape({
       // password: Yup.string().required().min(8)
@@ -32,18 +48,18 @@ const LogIn: FC<LogInProps> = (props:LogInProps) => {
 
       <div className='form-group mt-3'>
         <label>שם פרטי</label>
-        <input name='first_name' onChange={myForm.handleChange} className={myForm.errors.first_name? 'form-control is-invalid' : 'form-control' }></input>
+        <input name='first_name' onChange={myForm.handleChange} className={myForm.errors.first_name ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.first_name ? <small>{myForm.errors.first_name}</small> : ''}
       </div>
 
       <div className='form-group mt-3'>
         <label>שם משפחה</label>
-        <input name='last_name' onChange={myForm.handleChange} className={myForm.errors.last_name? 'form-control is-invalid' : 'form-control'}></input>
+        <input name='last_name' onChange={myForm.handleChange} className={myForm.errors.last_name ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.last_name ? <small>{myForm.errors.last_name}</small> : ''}
 
       </div>
 
-    <div className='form-group mt-3'>
+      <div className='form-group mt-3'>
         <label>סיסמה</label>
         <input name='password' onChange={myForm.handleChange} className={myForm.errors.password ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.password ? <small>{myForm.errors.password}</small> : ''}
@@ -54,7 +70,7 @@ const LogIn: FC<LogInProps> = (props:LogInProps) => {
         <input name='id' onChange={myForm.handleChange} className={myForm.errors.id ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.id ? <small>{myForm.errors.id}</small> : ''}
       </div>
-      
+
       <button type='submit' className='btn btn-warning mt-5'>הכנס</button>
     </form>
   </div>

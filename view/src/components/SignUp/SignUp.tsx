@@ -7,17 +7,17 @@ import { createUser } from '../../Redux/features/personSlice';
 import { useAppDispatch } from '../../Redux/store';
 
 interface SignUpProps { 
-  funcSetUserId:(id:string)=>void
+  funcSetUserId:(id:string,user_type:number)=>void
   children:React.ReactNode
 }
 
 const SignUp: FC<SignUpProps> = (props:SignUpProps) => {
   const dispatch  = useAppDispatch();
   const myForm = useFormik({
-    initialValues: new User("id","password","first_name", "last_name","email","phone","address"),
+    initialValues: new User("id","password","first_name", "last_name","email","phone","address",0),
     onSubmit: (valueForm: User) => {
       dispatch(createUser(valueForm))
-      props.funcSetUserId(valueForm.id)
+      props.funcSetUserId(valueForm.id,valueForm.type)
     },
     validationSchema: Yup.object().shape({
       id: Yup.string().required().min(9).max(9),
@@ -76,6 +76,13 @@ const SignUp: FC<SignUpProps> = (props:SignUpProps) => {
         <label>כתובת</label>
         <input name='address' onChange={myForm.handleChange} className={myForm.errors.address ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.address? <small>{myForm.errors.address}</small> : ''}
+
+      </div>
+
+      <div className='form-group mt-3'>
+        <label>סוג</label>
+        <input name='type' onChange={myForm.handleChange} className={myForm.errors.type ? 'form-control is-invalid' : 'form-control'}></input>
+        {myForm.errors.type? <small>{myForm.errors.type}</small> : ''}
 
       </div>
 

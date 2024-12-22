@@ -69,13 +69,13 @@ async function createUser(user) {
   try {
     if (isIdExist(user.id)) {
       if (config.manager_id == user.id) {
-        const sql = `insert into users values('${user.id}','${user.password}','${user.first_name}','${user.last_name}','${user.email}','${user.phone}','${user.address}', ${true})`;
+        const sql = `insert into users values('${user.id}','${user.password}','${user.first_name}','${user.last_name}','${user.email}','${user.phone}','${user.address}', ${3})`;
         console.log(sql);
         const [rows, fields] = await pool.query(sql);
         return rows;
       }
       else {
-        const sql = `insert into users values('${user.id}','${user.password}','${user.first_name}','${user.last_name}','${user.email}','${user.phone}','${user.address}', ${false})`;
+        const sql = `insert into users values('${user.id}','${user.password}','${user.first_name}','${user.last_name}','${user.email}','${user.phone}','${user.address}', ${1})`;
         console.log(sql);
         const [rows, fields] = await pool.query(sql);
         return rows;
