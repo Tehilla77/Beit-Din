@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const fsPromises = require('fs').promises;
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const cors = require('cors'); 
 const morgan = require('morgan');
@@ -19,10 +20,11 @@ const app = express();
 app.use (express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your frontend app URL
+  origin: 'http://localhost:3000',  // כתובת ה-Frontend שלך
   credentials: true
-}))
+}));
 
+app.use(cookieParser());
 app.use(logger);
 app.use(morgan('Method: :method URL: :url Status: :status '));
 app.use('/', express.static(path.join(__dirname, '/')));

@@ -43,9 +43,10 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
   // }
 
   const logInByIdAndPassword = (user: User) => {
+    console.log('hiiiiiiiiiii I here')
     FileService.getUserByIdAndPwd(user).then((res) => {
-      console.log(res.data)
-      if (res.data[0].is_manager == true) {
+      console.log('res.data.user',res.data.user)
+      if (res.data.user.id = '326381837') {
         console.log('is manager!')
         navigate('/show-cases')
         console.log('is manager1!')
@@ -68,6 +69,7 @@ const OpenWebsite: FC<OpenWebsiteProps> = () => {
   }
 
   const goToLogIn = () => {
+    console.log('hiiiiiiiiiii')
     setLogIn(true)
     setSignUp(false)
   }

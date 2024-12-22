@@ -38,7 +38,21 @@ async function isUserExist(first_name, last_name, pwd) {
 }
 
 async function isIdExist(id) {
-  const sql = `SELECT * FROM users WHERE users.id = ${id}`
+  const sql = `SELECT * FROM users WHERE users.id = '${id}'`
+  try {
+    const [rows, fields] = await pool.query(sql);
+    if (rows.length > 0) {
+      return true;
+    }
+    return false;
+  }
+  catch (error) {
+    console.log(error); return error;
+  }
+}
+
+async function isEmailExist(email) {
+  const sql = `SELECT * FROM users WHERE users.email = '${email}'`
   try {
     const [rows, fields] = await pool.query(sql);
     if (rows.length > 0) {
@@ -97,4 +111,4 @@ async function updateUser(user) {
   }
 }
 
-module.exports = { getUsers, getUserById, isUserExist, createUser, deleteUser, updateUser }
+module.exports = { getUsers, getUserById, isUserExist,isEmailExist, createUser, deleteUser, updateUser }

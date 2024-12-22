@@ -48,6 +48,12 @@ const LogIn: FC<LogInProps> = (props:LogInProps) => {
         <input name='password' onChange={myForm.handleChange} className={myForm.errors.password ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.password ? <small>{myForm.errors.password}</small> : ''}
       </div>
+
+      <div className='form-group mt-3'>
+        <label>תעודת זהות</label>
+        <input name='id' onChange={myForm.handleChange} className={myForm.errors.id ? 'form-control is-invalid' : 'form-control'}></input>
+        {myForm.errors.id ? <small>{myForm.errors.id}</small> : ''}
+      </div>
       
       <button type='submit' className='btn btn-warning mt-5'>הכנס</button>
     </form>

@@ -12,7 +12,7 @@ interface PersonState  {
     persons:[]
   }
 
-  export const getUsers = createAsyncThunk ("users/get",async(asyncThunk)=>{
+  export const getUsers = createAsyncThunk ("users/get",async()=>{
     try {
       const response = await axios.get(`${BASE_URL}/users`);
       return response.data
@@ -20,14 +20,16 @@ interface PersonState  {
       console.log(err);
     }  
   });
-  export const createUser = createAsyncThunk ("users/create",async(user:User,asyncThunk)=>{
+  export const createUser = createAsyncThunk("users/create", async (user: User) => {
     try {
-      const response = await axios.post(`${BASE_URL}/users`, user);
-      return response.data
+      const response = await axios.post(`${BASE_URL}/users`, user, { withCredentials: true });
+      return response.data;
     } catch (err) {
       console.log(err);
     }  
   });
+  
+  
 
   export const PersonSlice = createSlice({
     name: "PersonSlice",

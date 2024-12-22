@@ -1,8 +1,16 @@
 use beis_din_db;
 
+DROP TABLE IF EXISTS files;
+DROP TABLE IF EXISTS discussions;
+DROP TABLE IF EXISTS cases;
+DROP TABLE IF EXISTS inquiries;
+DROP TABLE IF EXISTS users;
+
+
+
 create table users(
 id varchar(9) primary key,
-password varchar(30),
+password varchar(225),
 first_name varchar(30),
 last_name varchar(30),
 email varchar(30),
@@ -23,16 +31,6 @@ create table cases(
  CONSTRAINT `fk_id_defendant_id` FOREIGN KEY (`defendant_id`) REFERENCES `users` (`id`)
 );
 
-create table inquiries(
-id int auto_increment primary key,
-content_inquiries varchar(200),
-finish_date date,
-type_inquiries int check(type_inquiries>0 and type_inquiries<4),
-is_done boolean,
-discussion_id int,
-CONSTRAINT `dis_id` FOREIGN KEY (`discussion_id`) REFERENCES `discussions` (`discussion_id`)
-);
-
 create table discussions(
 discussion_id int auto_increment primary key,
 discussion_date date,
@@ -43,6 +41,16 @@ is_finish boolean,
 CONSTRAINT `fk_id` FOREIGN KEY (`case_id`) REFERENCES `cases` (`case_id`)
 );
  
+ create table inquiries(
+id int auto_increment primary key,
+content_inquiries varchar(200),
+finish_date date,
+type_inquiries int check(type_inquiries>0 and type_inquiries<4),
+is_done boolean,
+discussion_id int,
+CONSTRAINT `dis_id` FOREIGN KEY (`discussion_id`) REFERENCES `discussions` (`discussion_id`)
+);
+
 create table files(
  id int auto_increment primary key,
  discussion_id int,

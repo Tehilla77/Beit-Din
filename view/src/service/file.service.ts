@@ -41,8 +41,10 @@ export default new class FileService {
     createInquire(d:any){
         return axios.post(`${BASE_URL}/discussion/createInquire`, d);
     }
-    getUserByIdAndPwd(user: User) {
+    async getUserByIdAndPwd(user: User) {
+        console.log('user in getUserByIdAndPwd',user)
         return axios.post(`${BASE_URL}/users/log-in`, user);
+        
     }
     deleteUser(id: any) {
         return axios.delete(`${BASE_URL}/users/${id}`);

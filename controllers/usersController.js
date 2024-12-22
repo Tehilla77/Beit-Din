@@ -1,5 +1,8 @@
-const { getUsers, getUserById, isUserExist, createUser, deleteUser, updateUser } = require('../models/usersModel');
+const { getUsers, getUserById, isUserExist,isEmailExist, createUser, deleteUser, updateUser } = require('../models/usersModel');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
+const saltRounds = 10;
 
 async function GetUsers(req, res) {
     try {
@@ -25,26 +28,32 @@ async function GetUserById(req, res) {
 async function LogIn(req, res) {
     try {
         const password = req.body.password;
-
+        const id = req.body.id;
         console.log(req.body)
         const u = await getUserById(req.body.id);
+        console.log("bcrypt pwd - -",u.password,"pwd - -",password);
+        console.log("bcrypt id - -",u.id, "id - -",id);
 
         if (!(await bcrypt.compare(password, u.password))) {
             throw new Error("not valid password");
         }
         else {
-
-
-            await model.putSuccsesLogin(user.email);
-            //שמירת טוקן
+            await isEmailExist(u.email);
+            
             const token = jwt.sign(
                 { "userId": u.id },
                 process.env.SECRET_KEY,
                 { expiresIn: '1d' }
             );
-            res.cookie('jwt', token, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
-            return { user: u, token: token };
-
+            //res.cookie('jwt', token, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                sameSite: 'None',
+                secure: process.env.NODE_ENV === 'production', // אפשר secure רק בסביבת פרודקשן
+                maxAge: 24 * 60 * 60 * 1000
+              });
+              console.log('I here, after res.cookie')
+            return{ user: u, token: token };
         }
     }
     catch (err) {
@@ -53,11 +62,10 @@ async function LogIn(req, res) {
 }
 
 
-
 async function CreateUser(req, res) {
-
-    const hashPwd = await bcrypt.hash(req.body.password, numSaltRoundss);
-
+    console.log("here/// ")
+    const hashPwd = await bcrypt.hash(req.body.password, saltRounds);
+    console.log("after hash....")
     const user = {
         id: req.body.id,
         password: hashPwd,
@@ -74,9 +82,12 @@ async function CreateUser(req, res) {
             process.env.SECRET_KEY,
             { expiresIn: '1d' }
         );
-
+        console.log("cookie:1 ");
+        console.log(token);
         res.cookie('jwt', token, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
-        return { user: u, token: token };
+        console.log("cookie1: ");
+        console.log(req.cookies);
+        res.send({ user: u, token: token });
     } catch (err) {
         throw err;
     }
