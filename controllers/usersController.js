@@ -24,7 +24,7 @@ async function GetUserById(req, res) {
     }
 }
 
-async function LogIn(req, res) {
+async function LogIn(req, res) {//it is work bad!
     try {
         const password = req.body.password;
         const id = req.body.id;
