@@ -6,26 +6,30 @@ import * as Yup from 'yup'
 import { createUser } from '../../Redux/features/personSlice';
 import { useAppDispatch } from '../../Redux/store';
 
-interface SignUpProps { 
-  funcSetUserId:(id:string,user_type:number)=>void
-  children:React.ReactNode
+interface SignUpProps {
+  funcSetUserId: (user_type: number) => void
+  children: React.ReactNode
 }
 
-const SignUp: FC<SignUpProps> = (props:SignUpProps) => {
-  const dispatch  = useAppDispatch();
+const SignUp: FC<SignUpProps> = (props: SignUpProps) => {
+  const dispatch = useAppDispatch();
   const myForm = useFormik({
-    initialValues: new User("id","password","first_name", "last_name","email","phone","address",0),
+    initialValues: new User("id", "password", "first_name", "last_name", "email", "phone", "address", 0),
     onSubmit: (valueForm: User) => {
+      console.log("value form",valueForm)
       dispatch(createUser(valueForm))
-      props.funcSetUserId(valueForm.id,valueForm.type)
+      props.funcSetUserId(valueForm.role)
     },
     validationSchema: Yup.object().shape({
+        role: Yup.number()
+          .required("Role is required")
+          .oneOf([1, 2], "Invalid type selected"),
       id: Yup.string().required().min(9).max(9),
       password: Yup.string().required().min(8)
-      .matches(/^(?=.*[a-z])/, 'Must contain at least one lowercase character')
-      .matches(/^(?=.*[A-Z])/, 'Must contain at least one uppercase character')
-      .matches(/^(?=.*[0-9])/, 'Must contain at least one number')
-      .matches(/^(?=.*[!@#%&])/, 'Must contain at least one special character'),
+        .matches(/^(?=.*[a-z])/, 'Must contain at least one lowercase character')
+        .matches(/^(?=.*[A-Z])/, 'Must contain at least one uppercase character')
+        .matches(/^(?=.*[0-9])/, 'Must contain at least one number')
+        .matches(/^(?=.*[!@#%&])/, 'Must contain at least one special character'),
       first_name: Yup.string().required().min(2),
       last_name: Yup.string().required().min(2),
       email: Yup.string().required().email()
@@ -47,13 +51,13 @@ const SignUp: FC<SignUpProps> = (props:SignUpProps) => {
       </div>
       <div className='form-group mt-3'>
         <label>שם פרטי</label>
-        <input name='first_name' onChange={myForm.handleChange} className={myForm.errors.first_name? 'form-control is-invalid' : 'form-control'}></input>
+        <input name='first_name' onChange={myForm.handleChange} className={myForm.errors.first_name ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.first_name ? <small>{myForm.errors.first_name}</small> : ''}
       </div>
 
       <div className='form-group mt-3'>
         <label>שם משפחה</label>
-        <input name='last_name' onChange={myForm.handleChange} className={myForm.errors.last_name? 'form-control is-invalid' : 'form-control'}></input>
+        <input name='last_name' onChange={myForm.handleChange} className={myForm.errors.last_name ? 'form-control is-invalid' : 'form-control'}></input>
         {myForm.errors.last_name ? <small>{myForm.errors.last_name}</small> : ''}
 
       </div>
@@ -75,17 +79,19 @@ const SignUp: FC<SignUpProps> = (props:SignUpProps) => {
       <div className='form-group mt-3'>
         <label>כתובת</label>
         <input name='address' onChange={myForm.handleChange} className={myForm.errors.address ? 'form-control is-invalid' : 'form-control'}></input>
-        {myForm.errors.address? <small>{myForm.errors.address}</small> : ''}
+        {myForm.errors.address ? <small>{myForm.errors.address}</small> : ''}
 
       </div>
 
       <div className='form-group mt-3'>
         <label>סוג</label>
-        <input name='type' onChange={myForm.handleChange} className={myForm.errors.type ? 'form-control is-invalid' : 'form-control'}></input>
-        {myForm.errors.type? <small>{myForm.errors.type}</small> : ''}
+        <select name='role' onChange={myForm.handleChange} className={myForm.errors.role ? 'form-control is-invalid' : 'form-control'}>  
+          <option value='1'>בעל דין</option>
+          <option value='2'>דיין</option>
+        </select>
+        {myForm.errors.role ? <small>{myForm.errors.role}</small> : ''}
 
       </div>
-
       <button type='submit' className='btn btn-warning mt-5'>הוסף</button>
 
     </form>

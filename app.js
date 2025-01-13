@@ -20,7 +20,7 @@ const app = express();
 app.use (express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors({
-  origin: 'http://localhost:3000',  // כתובת ה-Frontend שלך
+  origin: 'http://localhost:3000',  
   credentials: true
 }));
 

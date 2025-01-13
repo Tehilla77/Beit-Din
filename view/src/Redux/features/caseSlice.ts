@@ -12,7 +12,7 @@ interface CaseState  {
   }
   export const getCases = createAsyncThunk ("cases/get",async(asyncThunk)=>{
     try {
-      const response = await axios.get(`${BASE_URL}/cases/FullCases`);
+      const response = await axios.get(`${BASE_URL}/cases/FullCases`,{ withCredentials: true });
       return response.data
     } catch (err) {
       console.log(err);

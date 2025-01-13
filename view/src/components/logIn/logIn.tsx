@@ -1,79 +1,91 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import './logIn.scss';
-import User from '../../models/User';
-import FileService from '../../service/file.service';
+import LogInUser from '../../models/LogInUser';
 import { useFormik } from 'formik';
-import * as Yup from 'yup'
+import * as Yup from 'yup';
+import { useAppDispatch } from '../../Redux/store';
+import { addUser, logIn } from '../../Redux/features/personSlice';
+import { useSelector } from 'react-redux';
 
 interface LogInProps {
-  funcParentAdd: (id: string, user_type: number) => void
-  children: React.ReactNode
+  funcParentAdd: (user_type: number) => void;
+  children: React.ReactNode;
 }
 
 const LogIn: FC<LogInProps> = (props: LogInProps) => {
-  const [userId, setUserId] = useState<any>();
-  const [userType, setUserType] = useState<any>();
-  const [err, setErr] = useState<string>('')
-  const [IsErr, setIsErr] = useState<boolean>(false)
+  const [err, setErr] = useState<string>('');
+  const [IsErr, setIsErr] = useState<boolean>(false);
 
-  const logInByIdAndPassword = (user: User) => {
-    FileService.getUserByIdAndPwd(user).then((res) => {
-      setUserId(res.data.user.id)
-      setUserType(res.data.user.user_type)
-    }).catch(error => {
-      setIsErr(true)
-      setErr(error)
-    })
-  }
+  const myPersonSlice = useSelector((myStore: any) => myStore.personSlice);
+  const dispatch = useAppDispatch();
+
+   // useEffect to watch for changes in the Redux store's user state
+   useEffect(() => {
+    if (myPersonSlice.user.role!=0) { // Check if the user data exists
+      console.log("hey!!!!!!!!!!!!!!!!!!!!")
+      console.log(myPersonSlice.user.user.user_type)
+      props.funcParentAdd(myPersonSlice.user.user.user_type); // Pass user role to parent
+    }
+  }, [myPersonSlice.user, props]); // Re-run this effect only when user data changes
+
   const myForm = useFormik({
-    initialValues: new User("id", "password", "first_name", "last_name", "email", "phone", "address",1),
-    onSubmit: (valueForm: User) => {
-      logInByIdAndPassword(valueForm)
-      props.funcParentAdd(userId, userType)
+    initialValues: new LogInUser('email@gmail.com', '1234#'),
+    onSubmit: (valueForm: LogInUser) => {
+      try {
+        dispatch(logIn(valueForm));
+        props.funcParentAdd(myPersonSlice.user.role); // Pass user role to parent
+      } catch (err: any) {
+        setIsErr(true);
+        setErr(err.message || 'An error occurred');
+      }
     },
     validationSchema: Yup.object().shape({
-      // password: Yup.string().required().min(8)
-      // .matches(/^(?=.*[a-z])/, 'Must contain at least one lowercase character')
-      // .matches(/^(?=.*[A-Z])/, 'Must contain at least one uppercase character')
-      // .matches(/^(?=.*[0-9])/, 'Must contain at least one number')
-      // .matches(/^(?=.*[!@#%&])/, 'Must contain at least one special character'),
-      first_name: Yup.string().required().min(2),
-      last_name: Yup.string().required().min(2)
+      password: Yup.string().required().min(8)
+        .matches(/^(?=.*[a-z])/, 'Must contain at least one lowercase character')
+        .matches(/^(?=.*[A-Z])/, 'Must contain at least one uppercase character')
+        .matches(/^(?=.*[0-9])/, 'Must contain at least one number')
+        .matches(/^(?=.*[!@#%&])/, 'Must contain at least one special character'),
+      email: Yup.string().email('Invalid email address').required('Email is required'),
     })
-  })
+  });
 
-  return <div className="user-details">
-    <form onSubmit={myForm.handleSubmit} className='col-sm-6 m-5'>
-      <h2 className='mt-5'>{props.children}</h2>
+  // // useEffect to watch for changes in the Redux store's user state
+  // useEffect(() => {
+  //   if (myPersonSlice.user.id) { // Check if the user data exists
+      // props.funcParentAdd(myPersonSlice.user.role); // Pass user role to parent
+  //   }
+  // }, [myPersonSlice.user, props]); // Re-run this effect only when user data changes
 
-      <div className='form-group mt-3'>
-        <label>שם פרטי</label>
-        <input name='first_name' onChange={myForm.handleChange} className={myForm.errors.first_name ? 'form-control is-invalid' : 'form-control'}></input>
-        {myForm.errors.first_name ? <small>{myForm.errors.first_name}</small> : ''}
-      </div>
+  return (
+    <div className="user-details">
+      <form onSubmit={myForm.handleSubmit} className="col-sm-6 m-5">
+        <h2 className="mt-5">{props.children}</h2>
 
-      <div className='form-group mt-3'>
-        <label>שם משפחה</label>
-        <input name='last_name' onChange={myForm.handleChange} className={myForm.errors.last_name ? 'form-control is-invalid' : 'form-control'}></input>
-        {myForm.errors.last_name ? <small>{myForm.errors.last_name}</small> : ''}
+        <div className="form-group mt-3">
+          <label>אימייל</label>
+          <input
+            name="email"
+            onChange={myForm.handleChange}
+            className={myForm.errors.email ? 'form-control is-invalid' : 'form-control'}
+          />
+          {myForm.errors.email ? <small>{myForm.errors.email}</small> : ''}
+        </div>
 
-      </div>
+        <div className="form-group mt-3">
+          <label>סיסמה</label>
+          <input
+            name="password"
+            onChange={myForm.handleChange}
+            className={myForm.errors.password ? 'form-control is-invalid' : 'form-control'}
+          />
+          {myForm.errors.password ? <small>{myForm.errors.password}</small> : ''}
+        </div>
 
-      <div className='form-group mt-3'>
-        <label>סיסמה</label>
-        <input name='password' onChange={myForm.handleChange} className={myForm.errors.password ? 'form-control is-invalid' : 'form-control'}></input>
-        {myForm.errors.password ? <small>{myForm.errors.password}</small> : ''}
-      </div>
-
-      <div className='form-group mt-3'>
-        <label>תעודת זהות</label>
-        <input name='id' onChange={myForm.handleChange} className={myForm.errors.id ? 'form-control is-invalid' : 'form-control'}></input>
-        {myForm.errors.id ? <small>{myForm.errors.id}</small> : ''}
-      </div>
-
-      <button type='submit' className='btn btn-warning mt-5'>הכנס</button>
-    </form>
-  </div>
-}
+        <button type="submit" className="btn btn-warning mt-5">הכנס</button>
+      </form>
+      {IsErr ? <p>{err.toString()}</p> : ''}
+    </div>
+  );
+};
 
 export default LogIn;

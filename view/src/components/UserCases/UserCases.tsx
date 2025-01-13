@@ -3,19 +3,21 @@ import './UserCases.scss';
 // import { useNavigate } from 'react-router-dom';
 import FileService from '../../service/file.service';
 import User from '../../models/User';
+import { useSelector } from 'react-redux';
 
 
 
 interface UserCasesProps {
-    userId: string;
 }
 
-const UserCases: React.FC<UserCasesProps> = ({ userId }) => {
+const UserCases: React.FC<UserCasesProps> = () => {
     const [UserCases, setUserCases] = useState<any[]>([{}]);
     const [isUserCases, setIsUserCases] = useState<boolean>(false)
+    const myPersonSlice = useSelector((myStore:any)=>myStore.personSlice)
+
 
     useEffect(() => {
-        getUserCases(userId)
+        getUserCases(myPersonSlice.user.user.id)
     }, []);
 
 

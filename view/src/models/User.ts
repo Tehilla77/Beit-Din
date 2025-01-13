@@ -6,9 +6,9 @@ export default class User {
     email!: string
     phone!: string
     address!: string
-    type!: number
+    role!: number
 
-    constructor(id: string,password: string,first_name: string, last_name: string, email: string,phone: string,address: string,type: number) {
+    constructor(id: string,password: string,first_name: string, last_name: string, email: string,phone: string,address: string,role: number) {
 
         this.id = id;
         this.password = password;
@@ -17,6 +17,6 @@ export default class User {
         this.phone = phone;
         this.email = email;
         this.address = address;
-        this.type = type
+        this.role = role
     }
 }

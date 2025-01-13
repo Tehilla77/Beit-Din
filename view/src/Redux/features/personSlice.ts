@@ -1,53 +1,82 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios";
 import User from "../../models/User";
+import { stat } from "fs";
+import LogInUser from "../../models/LogInUser";
 
 const BASE_URL = "http://localhost:5000";
 
-interface PersonState  {
-    persons: User[]
-    }
+interface PersonState {
+  user: User
+  loading: boolean;
+  error: string | null;
+}
 
-  const initialState:PersonState = {
-    persons:[]
+const initialState: PersonState = {
+  user: {
+    id: "",
+    password: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    address: "",
+    role: 0,
+  },
+  loading: false,
+  error: null
+}
+
+//users
+
+export const logIn = createAsyncThunk("users/login", async (user:LogInUser,{ rejectWithValue }) => {
+  try {
+    console.log("I in login redux");
+    // console.log(user);
+    const response = await axios.post(`${BASE_URL}/users/log-in`, user, {
+      withCredentials: true
+  });
+  console.log("response.data:",response.data);
+    return response.data
+  } catch (err) {
+    return rejectWithValue("הנתונים שהזנת שגויים");
   }
+});
 
-  export const getUsers = createAsyncThunk ("users/get",async()=>{
-    try {
-      const response = await axios.get(`${BASE_URL}/users`);
-      return response.data
-    } catch (err) {
-      console.log(err);
-    }  
-  });
-  export const createUser = createAsyncThunk("users/create", async (user: User) => {
-    try {
-      const response = await axios.post(`${BASE_URL}/users`, user, { withCredentials: true });
-      return response.data;
-    } catch (err) {
-      console.log(err);
-    }  
-  });
-  
-  
+export const createUser = createAsyncThunk("users/create", async (user: User) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/users`, user, { withCredentials: true });
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+});
 
-  export const PersonSlice = createSlice({
-    name: "PersonSlice",
-    initialState:initialState,
-    reducers:{
-       addPerson:(state,action)=>{
-           state.persons.push(action.payload);
-         },
-      },
-      extraReducers:(builder)=>{
-        builder.addCase(getUsers.fulfilled,(state,action)=>{
-        state.persons = action.payload
-      })
-      builder.addCase(createUser.fulfilled,(state,action)=>{
-        state.persons.push(action.payload)
-      })
-    }
+
+export const PersonSlice = createSlice({
+  name: "PersonSlice",
+  initialState: initialState,
+  reducers: {
+    addUser: (state, action) => {
+      state.user = (action.payload);
+      state.loading = true;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logIn.fulfilled, (state, action) => {
+      state.user = action.payload
+      state.loading = false; // Set loading to false once the request is done
+      state.error = null; // Clear any previous errors
+    })
+    builder.addCase(createUser.fulfilled, (state, action) => {
+      state.user = (action.payload)
+      state.loading = false; // Set loading to false once the request is done
+      state.error = null; // Clear any previous errors
+    })
+  }
 })
 
 export default PersonSlice.reducer;
-export const {addPerson} = PersonSlice.actions;
+export const { addUser } = PersonSlice.actions;
+
+

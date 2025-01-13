@@ -5,7 +5,7 @@ const { GetUserById } = require('../controllers/usersController');
 const verifyUser = async(req, res, next) => {
     try {
         const user = await GetUserById(req.user);
-        if(user[0].user_type==1){ 
+        if(user.user_type==1){ 
             next();    
           }
           else

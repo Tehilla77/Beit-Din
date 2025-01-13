@@ -12,9 +12,20 @@ async function getUsers() {
     console.log(error); return error;
   }
 }
-
 async function getUserById(id) {
   const sql = `SELECT * FROM users WHERE id = ${id}`;
+  try {
+    const [rows, fields] = await pool.query(sql);
+    console.log(rows)
+    return rows[0];
+  }
+  catch (error) {
+    console.log(error); console.log(error); return error;
+  }
+}
+
+async function getUserByEmail(email) {
+  const sql = `SELECT * FROM users WHERE email = '${email}'`;
   try {
     const [rows, fields] = await pool.query(sql);
     console.log(rows)
@@ -75,15 +86,16 @@ async function createUser(user) {
         return rows;
       }
       else {
-        const sql = `insert into users values('${user.id}','${user.password}','${user.first_name}','${user.last_name}','${user.email}','${user.phone}','${user.address}', ${1})`;
+        console.log('user:',user)
+        const sql = `insert into users values('${user.id}','${user.password}','${user.first_name}','${user.last_name}','${user.email}','${user.phone}','${user.address}', ${user.role})`;
         console.log(sql);
         const [rows, fields] = await pool.query(sql);
         return rows;
       }
     }
     else {
-      // return new Error ('user-id already exist');
-      return 'user-id already exist';
+      return new Error ('user-id already exist');
+      // return 'user-id already exist';
     }
   }
   catch (error) {
@@ -111,4 +123,4 @@ async function updateUser(user) {
   }
 }
 
-module.exports = { getUsers, getUserById, isUserExist,isEmailExist, createUser, deleteUser, updateUser }
+module.exports = { getUserById, getUsers, getUserByEmail, getUserByEmail, isUserExist,isEmailExist, createUser, deleteUser, updateUser }

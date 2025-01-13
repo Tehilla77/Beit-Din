@@ -42,9 +42,10 @@ export default new class FileService {
         return axios.post(`${BASE_URL}/discussion/createInquire`, d);
     }
     async getUserByIdAndPwd(user: User) {
-        console.log('user in getUserByIdAndPwd',user)
-        return axios.post(`${BASE_URL}/users/log-in`, user);
-        
+        console.log('user in getUserByIdAndPwd', user);
+        return axios.post(`${BASE_URL}/users/log-in`, user, {
+            withCredentials: true
+        });
     }
     deleteUser(id: any) {
         return axios.delete(`${BASE_URL}/users/${id}`);
@@ -57,7 +58,7 @@ export default new class FileService {
     }
     getUserCases(id: any) {
         console.log(`${BASE_URL}/cases/userId/${id}`)
-        return axios.get(`${BASE_URL}/cases/userId/${id}`);
+        return axios.get(`${BASE_URL}/cases/userId/${id}`, { withCredentials: true });
     }
     getInquiriesByDiscussionId(id: any) {
         return axios.get(`${BASE_URL}/discussion/inquires/${id}`);

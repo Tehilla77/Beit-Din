@@ -6,7 +6,7 @@ import User from '../../models/User';
 import UserCases from '../UserCases/UserCases';
 import { useAppDispatch } from "../../Redux/store";
 import { useSelector } from "react-redux";
-import { getUsers } from "../../Redux/features/personSlice";
+// import { getUsers } from "../../Redux/features/personSlice";
 
 interface ShowUsersProps {
   funcSetUserId:(id:number)=>void
@@ -22,7 +22,7 @@ const ShowUsers: FC<ShowUsersProps> = (props:ShowUsersProps) => {
 
   const myPersonSlice = useSelector((myStore:any)=>myStore.personSlice)
   const dispatch = useAppDispatch();
-   useEffect(()=>{dispatch(getUsers())})
+  //  useEffect(()=>{dispatch(getUsers())})
 
   const getUserByNameFromReact = (event: any) => {
       setIsUser(false)

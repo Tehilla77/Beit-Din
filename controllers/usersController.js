@@ -1,119 +1,141 @@
-const { getUsers, getUserById, isUserExist,isEmailExist, createUser, deleteUser, updateUser } = require('../models/usersModel');
+const { getUsers, getUserByEmail, getUserById, createUser, deleteUser, updateUser } = require('../models/usersModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 async function GetUsers(req, res) {
     try {
-        const user = await getUsers();
-        res.send(user);
-    }
-    catch (error) {
-        return error;
+        const users = await getUsers();
+        res.status(200).send(users); // Ensure to return a proper status code
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Failed to retrieve users" }); // Return error with proper message
     }
 }
 
-
-async function GetUserById(req, res) {
+async function GetUserByEmail(req, res) {
     try {
-        const user = await getUserById(req.params.id);
-        res.send(user);
-    }
-    catch (error) {
-        return error;
+        const user = await getUserByEmail(req.params.email);
+        if (!user) {
+            return res.status(404).send({ error: "User not found" });
+        }
+        res.status(200).send(user); // Return the user if found
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Failed to retrieve user" });
     }
 }
 
-async function LogIn(req, res) {//it is work bad!
+async function GetUserById(userId) {
     try {
-        const password = req.body.password;
-        const id = req.body.id;
-        console.log(req.body)
-        const u = await getUserById(req.body.id);
-        console.log("bcrypt pwd - -",u.password,"pwd - -",password);
-        console.log("bcrypt id - -",u.id, "id - -",id);
-
-        if (!(await bcrypt.compare(password, u.password))) {
-            throw new Error("not valid password");
-        }
-        else {
-            await isEmailExist(u.email);
-            const token = jwt.sign(
-                { "userId": u.id },
-                process.env.SECRET_KEY,
-                { expiresIn: '1d' }
-            );
-            res.cookie('jwt', token, {
-                httpOnly: true,
-                sameSite: 'None',
-                secure: true, 
-                maxAge: 24 * 60 * 60 * 1000
-              });
-              console.log('I here, after res.cookie')
-              console.log(token)
-            res.send  ({ user: u, token: token });
-        }
+      // Fetch the user from the database using the provided userId
+      const user = await getUserById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user;  // Return user data
+    } catch (error) {
+      console.error(error);
+      throw error;  // Propagate error to be handled by the calling middleware
     }
-    catch (err) {
-        throw err;
+  }
+
+async function LogIn(req, res) {
+    try {
+        const { email, password } = req.body;
+        const user = await getUserByEmail(email);
+
+        if (!user) {
+            return res.status(404).send({ error: "User not found" });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).send({ error: "Invalid password" });
+        }
+
+        const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+
+        // Set token in HTTP-only cookie for secure access
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            sameSite: 'Lax', 
+            secure: process.env.NODE_ENV === 'production', // Make secure cookie conditional on production environment
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        res.status(200).send({ message: "Login successful", user: { ...user, password: undefined }, token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: err.message || "An error occurred during login" });
     }
 }
-
 
 async function CreateUser(req, res) {
-    const hashPwd = await bcrypt.hash(req.body.password, saltRounds);
-    const user = {
-        id: req.body.id,
-        password: hashPwd,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        phone: req.body.phone,
-        email: req.body.email,
-        address: req.body.address
-    }
+    const { password, first_name, last_name, phone, email, address, role } = req.body;
+    
     try {
-        const u = await createUser(user)
-        const token = jwt.sign(
-            { "userId": u.id },
-            process.env.SECRET_KEY,
-            { expiresIn: '1d' }
-        );
-        console.log(token);
-        res.cookie('jwt', token, 
-            { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
-        res.send({ user: u, token: token });
+        const hashPwd = await bcrypt.hash(password, saltRounds);
+
+        const newUser = {
+            password: hashPwd,
+            first_name,
+            last_name,
+            phone,
+            email,
+            address,
+            role
+        };
+
+        const user = await createUser(newUser);
+
+        const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+
+        // Set token in HTTP-only cookie for secure access
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true, // Ensure it's secure when in production
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        res.status(201).send({ message: "User created successfully", user: { ...user, password: undefined }, token });
     } catch (err) {
-        throw err;
+        console.error(err);
+        res.status(500).send({ error: "User creation failed" });
     }
 }
 
 async function DeleteUser(req, res) {
     try {
-        const u = await deleteUser(req.params.id)
-        res.send(u)
-    }
-    catch (error) {
-        return error;
+        const user = await deleteUser(req.params.id);
+        res.status(200).send({ message: "User deleted successfully", user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Failed to delete user" });
     }
 }
 
 async function UpdateUser(req, res) {
-    const user = {
-        id: req.body.id,
-        password: req.body.password,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        phone: req.body.phone,
-        email: req.body.email,
-        address: req.body.address
-    }
+    const { id, password, first_name, last_name, phone, email, address } = req.body;
+
     try {
-        const u = await updateUser(user)
-        res.send(u)
-    }
-    catch (error) {
-        return error;
+        const updatedUser = {
+            id,
+            password: password ? await bcrypt.hash(password, saltRounds) : undefined,
+            first_name,
+            last_name,
+            phone,
+            email,
+            address
+        };
+
+        const user = await updateUser(updatedUser);
+        res.status(200).send({ message: "User updated successfully", user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Failed to update user" });
     }
 }
 
-module.exports = { GetUserById, GetUsers, LogIn, CreateUser, DeleteUser, UpdateUser };
+module.exports = { GetUserByEmail,GetUserById, GetUsers, LogIn, CreateUser, DeleteUser, UpdateUser };

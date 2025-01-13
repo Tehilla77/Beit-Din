@@ -119,8 +119,8 @@ const CaseDetails: FC<CaseDetailsProps> = (props: CaseDetailsProps) => {
         <span className="input-group-text" id="basic-addon1"><img src={emailIcon} className='logo' /></span>
       </div><input type="text" ref={issueRef} onKeyUp={getIssue}  placeholder="press the issue" className='m-3' ></input></div></div> : ''}
 
-    {isCreateNewDef ? <div><SignUp funcSetUserId={setExistProId}>פרטי נתבע</SignUp></div> : ''}
-    {isCreateNewPro ? <div><SignUp funcSetUserId={setExistProId}>פרטי תובע</SignUp></div> : ''}
+    {/* {isCreateNewDef ? <div><SignUp funcSetUserId={setExistProId}>פרטי נתבע</SignUp></div> : ''}
+    {isCreateNewPro ? <div><SignUp funcSetUserId={setExistProId}>פרטי תובע</SignUp></div> : ''} */}
 
     {!isProId && isShowUsersPro ? <ShowUsers funcSetUserId={setExistDefId}> בחר תובע</ShowUsers> : ''}
     {isProId && !isDefId && isShowUsersDef ? <ShowUsers funcSetUserId={setExistDefId}> בחר נתבע</ShowUsers> : ''}

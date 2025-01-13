@@ -1,6 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
-const {GetUserById,GetUsers, CreateUser, DeleteUser,UpdateUser, LogIn} = require('../controllers/usersController');
+const {GetUserByEmail,GetUsers, CreateUser, DeleteUser,UpdateUser, LogIn} = require('../controllers/usersController');
 const verifyJWT = require("../middlewares/verifyJWT");
 usersRouter.use(express.json());
 usersRouter.use(express.urlencoded({ extended: true }));
@@ -14,7 +14,7 @@ usersRouter.route('/log-in')
 .post(LogIn)
 
 usersRouter.route('/:id')
-.get(GetUserById)
+.get(GetUserByEmail)
 .delete(DeleteUser)
 
 usersRouter.route('/')
