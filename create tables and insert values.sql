@@ -18,7 +18,7 @@ create table users(
     email varchar(30),
     phone varchar(30),
     address varchar(30),
-    user_type int
+    userRole int
 );
 
 create table cases(

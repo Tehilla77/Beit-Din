@@ -1,4 +1,5 @@
 const { getCases, getCaseById, createCase, getCaseByUserId, geFullCases, updateLastEnter } = require('../models/casesModel');
+const {getUserById} = require('../models/usersModel')
 
 async function GetCases(req, res) {
     try {
@@ -12,12 +13,23 @@ async function GetCases(req, res) {
 
 async function GeFullCases(req, res) {
     try {
-        const c = await geFullCases();
-        res.send(c);
-    }
-    catch (error) {
-        return error;
-    }
+        console.log("I enter to getfullcases")
+        const user = await getUserById(req.user);
+        console.log(user);
+        if (user.userRole == 3 || user.userRole == 2) {
+            console.log("admin permission")
+            const c = await geFullCases();
+            res.send(c);
+        }
+        else if (user.userRole == 1) {
+            console.log("user permission")
+            const c = await getCaseByUserId();
+            res.send(c);
+        }
+        }   catch (error) {
+            return error;
+        }
+   
 }
 
 

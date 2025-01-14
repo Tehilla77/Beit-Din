@@ -5,7 +5,8 @@ const { GetUserById } = require('../controllers/usersController');
 const verifyDayan = async(req, res, next) => {
     try {
         const user = await GetUserById(req.user);
-        if(user.user_type==2){ 
+        if(user.userRole==2){ 
+          console.log("verify Dayan")
             next();    
           }
           else

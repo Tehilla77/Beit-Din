@@ -12,9 +12,6 @@ const usersRouter = require('./routers/users')
 const casesRouter = require('./routers/cases')
 const filesRouter = require('./routers/files')
 
-const verifyJWT = require("./middlewares/verifyJWT");
-// const verifyAdmin = require("./middlewares/verifyAdmin");
-// const verifyUser = require("./middlewares/verifyUser");
 
 const app = express();
 app.use (express.json());
@@ -24,17 +21,17 @@ app.use(cors({
   credentials: true
 }));
 
+const verifyJWT = require("./middlewares/verifyJWT");
+
 app.use(cookieParser());
 app.use(logger);
 app.use(morgan('Method: :method URL: :url Status: :status '));
 app.use('/', express.static(path.join(__dirname, '/')));
 
 app.use('/users',usersRouter)
-
-
-app.use('/discussion',discussionRouter)
-app.use('/files',filesRouter)
-app.use('/cases',casesRouter)
+app.use('/discussion',verifyJWT,discussionRouter)
+app.use('/files',verifyJWT,filesRouter)
+app.use('/cases',verifyJWT,casesRouter)
 
 app.get('/',(req,res)=>{
   res.send('home');

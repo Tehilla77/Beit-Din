@@ -4,14 +4,15 @@ const { GetCaseById, GetCases, CreateCase, GetCaseByUserId, GeFullCases, UpdateL
 // const { verify } = require('jsonwebtoken');
 const verifyJWT = require('../middlewares/verifyJWT');
 const verifyAdmin = require('../middlewares/verifyAdmin');
+const verifyUser = require('../middlewares/verifyUser');
 // casesRouter.route('/updateLastEnter/:id')
 // .put(UpdateLastEnter)
 
 casesRouter.route('/FullCases')
-    .get(verifyJWT, verifyAdmin, GeFullCases)
+    .get(GeFullCases)
 
 casesRouter.route('/userId/:id')
-    .get(verifyJWT, GetCaseByUserId)
+    .get(verifyUser, GetCaseByUserId)
 
 casesRouter.route('/:id')
     .get(GetCaseById)

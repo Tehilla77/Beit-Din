@@ -26,7 +26,6 @@ const App: React.FC = () => {
       <Routes>
         <Route path='' element={<OpenWebsite></OpenWebsite>}></Route>
         <Route path='/user-cases' element={<UserCases></UserCases>}></Route>
-
         <Route path='/show-cases' element={<ShowCases></ShowCases>}></Route>
         <Route path='case-datails' element={<CaseDetails></CaseDetails>}></Route>
         {/* <Route path='manage-case' element={<ManageCase case={params}></ManageCase>}></Route> */}

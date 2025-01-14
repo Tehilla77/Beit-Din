@@ -44,7 +44,7 @@ async function LogIn(req, res) {
     try {
         const { email, password } = req.body;
         const user = await getUserByEmail(email);
-
+        
         if (!user) {
             return res.status(404).send({ error: "User not found" });
         }
@@ -64,7 +64,7 @@ async function LogIn(req, res) {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res.status(200).send({ message: "Login successful", user: { ...user, password: undefined }, token });
+        res.send ({ user: user, token: token });
     } catch (err) {
         console.error(err);
         res.status(500).send({ error: err.message || "An error occurred during login" });
@@ -72,12 +72,13 @@ async function LogIn(req, res) {
 }
 
 async function CreateUser(req, res) {
-    const { password, first_name, last_name, phone, email, address, role } = req.body;
-    
+    console.log("req.body", req.body)
+    const { id, password, first_name, last_name, phone, email, address, role } = req.body;
     try {
         const hashPwd = await bcrypt.hash(password, saltRounds);
 
         const newUser = {
+            id,
             password: hashPwd,
             first_name,
             last_name,
@@ -99,7 +100,7 @@ async function CreateUser(req, res) {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res.status(201).send({ message: "User created successfully", user: { ...user, password: undefined }, token });
+        res.send ({ user: newUser, token: token });
     } catch (err) {
         console.error(err);
         res.status(500).send({ error: "User creation failed" });

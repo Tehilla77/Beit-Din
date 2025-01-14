@@ -1,0 +1,82 @@
+/* Custom Blue and Light Orange Colors */
+$blue-color: #007bff; /* Bootstrap primary blue */
+$light-orange: #ffcc80; /* Light orange color */
+
+/* Main container for OpenWebsite */
+.container {
+//   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f7fb; /* Light gray background */
+  padding: 2rem;
+}
+
+// /* Custom spacing for the buttons */
+// .button-container {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 1rem; /* Adjust the gap to control the space between buttons */
+//     align-items: center;
+//   }
+  
+//   /* R
+
+/* Styling for the title */
+h1 {
+  font-size: 2.5rem;
+  color: $blue-color;
+  font-weight: 600;
+}
+
+/* Button styles */
+.btn-warning {
+  background-color: $light-orange;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken($light-orange, 10%);
+    // color: $blue-color;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.btn-warning:active {
+  background-color: darken($light-orange, 15%);
+}
+
+// /* Form section styles */
+form {
+  max-width: 800px;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group label {
+  font-size: 1rem;
+//   color: $blue-color;
+  font-weight: 600;
+}
+
+.form-control {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  padding: 0.8rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsiveness: Stack buttons vertically on smaller screens */
+@media (max-width: 768px) {
+  .col-sm-6 {
+    width: 100%;
+  }
+}

@@ -5,8 +5,8 @@ const { GetUserById } = require('../controllers/usersController');
 const verifyAdmin = async (req, res, next) => {
   try {
     const user = await GetUserById(req.user);
-    if (user.user_type == 3) {
-      console.log("admin!!!!!!!!!!!!");
+    if (user.userRole == 3) {
+      console.log("verify Admin")
       next();
     }
     else
